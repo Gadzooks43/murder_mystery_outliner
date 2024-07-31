@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery Archetype</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Mystery Archetype</h1>
+        <form onsubmit="saveArchetype(event)">
+            <div class="form-group">
+                <label for="archetype">Enter the mystery archetype:</label>
+                <input type="text" class="form-control" id="archetype" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        function saveArchetype(event) {
+            event.preventDefault();
+            const archetype = document.getElementById('archetype').value;
+            storyDetails.mysteryArchetype = archetype;
+            updateProgressBar();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
