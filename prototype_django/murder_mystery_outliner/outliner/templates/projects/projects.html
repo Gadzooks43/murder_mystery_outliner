@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-3">
+  <div class="col">
+    <h2 class="mb-3">Your Projects</h2>
+  </div>
+  <div class="col text-right">
+    <!-- Button triggers the CREATE modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#createProjectModal"
+    >
+      Create New Project
+    </button>
+  </div>
+</div>
+
+<!-- Table of Projects -->
+{% if projects %}
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Name</th>
+        <th>Date Created</th>
+        <th>Complete?</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+      <tr>
+        <!-- CLICKABLE project name links to detail view -->
+        <td>
+          <a href="{% url 'project_detail' project.name %}">
+            {{ project.name }}
+          </a>
+        </td>
+        <td>{{ project.date_created|date:"Y-m-d H:i" }}</td>
+        <td>
+          {% if project.is_complete %}
+            <span class="badge badge-success">Yes</span>
+          {% else %}
+            <span class="badge badge-secondary">No</span>
+          {% endif %}
+        </td>
+        <td>
+          <!-- Trigger DELETE modal, passing data attributes -->
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            data-toggle="modal"
+            data-target="#deleteProjectModal"
+            data-project-id="{{ project.pk }}"
+            data-project-name="{{ project.name }}"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p>No projects found. Click the button above to create one!</p>
+{% endif %}
+
+<!-- CREATE Project Modal -->
+<div
+  class="modal fade"
+  id="createProjectModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createProjectModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- Form posts to the same URL -->
+      <form method="POST" action="">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="createProjectModalLabel">
+            Create a New Project
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{ form.non_field_errors }}
+          <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Project Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <div class="text-danger">{{ form.name.errors }}</div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Save Project
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE Project Modal (single, dynamic) -->
+<div
+  class="modal fade"
+  id="deleteProjectModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteProjectModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- Initially action="" so we can set it in JS -->
+      <form id="deleteProjectForm" method="POST" action="">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteProjectModalLabel">
+            Confirm Deletion
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete
+          <strong id="projectName"></strong>?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-danger">
+            Yes, Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+  // Make sure jQuery is loaded before this script
+  $('#deleteProjectModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);         // The "Delete" button
+    var projectId = button.data('project-id');
+    var projectName = button.data('project-name');
+
+    var modal = $(this);
+    modal.find('#projectName').text(projectName);
+
+    // The crucial step: set form action to /projects/delete/<pk>/
+    var deleteUrl = '/delete_project/' + projectId + '/';
+    modal.find('#deleteProjectForm').attr('action', deleteUrl);
+
+    console.log('Delete form action set to:', deleteUrl);
+  });
+</script>
+{% endblock extra_scripts %}
+{% endblock content %}

@@ -1,0 +1,46 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mystery Outliner</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css"
+    />
+  </head>
+
+  <!-- 
+       1) Make the body a flex container in a column direction.
+       2) .min-vh-100 ensures body takes at least full viewport height.
+    -->
+  <body class="d-flex flex-column min-vh-100">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Mystery Outliner</a>
+      </nav>
+    </header>
+
+    <!-- 
+         3) Main content area that can grow.
+         flex-grow-1 or .flex-fill automatically expands
+         so the footer can be pushed to the bottom.
+       -->
+    <main class="container flex-fill mt-4">
+      {% block content %}
+      {% endblock content %}
+    </main>
+
+    <!-- 
+         4) Use .mt-auto (margin-top: auto) so the footer
+         pushes itself to the bottom if there's extra space.
+       -->
+    <footer class="mt-auto bg-dark text-center text-light py-3">
+      <p>© 2025 Mystery Outliner Kenney43 Site</p>
+    </footer>
+  </body>
+</html>

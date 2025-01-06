@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col">
+    <h2>Project Detail</h2>
+    <p><strong>Name:</strong> {{ project.name }}</p>
+    <p><strong>Created:</strong> {{ project.date_created|date:"Y-m-d H:i" }}</p>
+    <p>
+      <strong>Completed?</strong>
+      {% if project.is_complete %}
+        <span class="badge badge-success">Yes</span>
+      {% else %}
+        <span class="badge badge-secondary">No</span>
+      {% endif %}
+    </p>
+    <!-- Add more details about the project here in the future -->
+  </div>
+</div>
+{% endblock content %}
