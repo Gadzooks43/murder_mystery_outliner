@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <!-- Sidebar -->
+  <div class="col-md-3">
+    <div class="list-group">
+      <a
+        href="?section=characters"
+        class="list-group-item list-group-item-action"
+      >
+        Characters
+      </a>
+      <a
+        href="?section=plot"
+        class="list-group-item list-group-item-action"
+      >
+        Plot
+      </a>
+      <a
+        href="?section=chapters"
+        class="list-group-item list-group-item-action"
+      >
+        Chapters
+      </a>
+      <a
+        href="?section=summary"
+        class="list-group-item list-group-item-action"
+      >
+        Summary
+      </a>
+      <a
+        href="?section=outline"
+        class="list-group-item list-group-item-action"
+      >
+        Outline
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="col-md-9">
+    <!-- Basic Project Info (always visible or only if no section is chosen) -->
+    <h2>Project: {{ project.name }}</h2>
+    <p><strong>Created:</strong> {{ project.date_created|date:"Y-m-d H:i" }}</p>
+    <p>
+      <strong>Completed?</strong>
+      {% if project.is_complete %}
+        <span class="badge badge-success">Yes</span>
+      {% else %}
+        <span class="badge badge-secondary">No</span>
+      {% endif %}
+    </p>
+    <hr />
+
+    <!-- Conditionally include partial based on the 'section' parameter -->
+    {% if section == "characters" %}
+      {% include "project_pages/characters.html" %}
+    {% elif section == "plot" %}
+      {% include "project_pages/plot.html" %}
+    {% elif section == "chapters" %}
+      {% include "project_pages/chapters.html" %}
+    {% elif section == "summary" %}
+      {% include "project_pages/summary.html" %}
+    {% elif section == "outline" %}
+      {% include "project_pages/outline.html" %}
+    {% else %}
+      <!-- Default content if no section is chosen -->
+      <p>Please select a section from the sidebar to continue.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}

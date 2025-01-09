@@ -56,7 +56,9 @@ def project_detail(request, project_name):
     Note: This assumes names are unique enough or won't cause collisions.
     """
     project = get_object_or_404(Project, name=project_name)
-    # For now, just render some simple detail
+    section = request.GET.get('section')  # e.g. "characters", "plot", etc.
+
     return render(request, 'projects/project_detail.html', {
-        'project': project
+        'project': project,
+        'section': section
     })
